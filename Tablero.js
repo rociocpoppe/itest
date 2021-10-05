@@ -32,6 +32,9 @@ class Tablero{
         return this.casillero;
     }
       
+    getWidth(){
+        return this.width;
+    }
 
 
     
