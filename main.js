@@ -3,7 +3,7 @@ COSAS PARA HACER:
 - Asignar turnos
 - Saber si hay un ganador y quien es
 - Las piezas de cada jugador se dibujan con una imagen
-- Se debe poder reiniciar el juego, 
+- Se debe poder reiniciar el juego, (hace otros 49 casilleros, no los reinicia)
 - Colocar un timer que limite el tiempo de juego.
 - Terminar logica de tamaños de distintos tableros(6 en línea, 7 en línea, 8 en línea)
 - Agregar diferentes tipos de fichas (colores, formatos).
@@ -38,11 +38,11 @@ const CANT_FIG = 25;
 
 let mousedown = false;
 
-let tableroJuego = [];
-for (let i = 0; i < 7; i++) {
-    tableroJuego[i] = new Array(6);//agrega 6 posiciones vacias al arreglo (el alto del tablero)
-    //console.log(tableroJuego[i]);
-}
+// let tableroJuego = [];
+// for (let i = 0; i < 7; i++) {
+//     tableroJuego[i] = new Array(6);//agrega 6 posiciones vacias al arreglo (el alto del tablero)
+//     //console.log(tableroJuego[i]);
+// }
 
 // let game= new Juego(ctxJuego,juego.width, juego.height);
 // game.dibujarJuego();
@@ -178,12 +178,12 @@ canvas.addEventListener('click', function (e) {
         let _x = e.layerX;
         let casilleros = tableroI.getCasilleros();//[casillero, false, fila, columna]
         for (let i = 0; i < casilleros.length; i++) {//49 pos
-            console.log("ENTRO AL FOR");
+            //console.log("ENTRO AL FOR");
             if (_x < casilleros[i][0].getPosX() + casilleros[i][0].getRadius() &&
                 _x > casilleros[i][0].getPosX() - casilleros[i][0].getRadius()) {
 
                 let columna = casilleros[i][0].getPosX();
-                console.log(columna);
+                //console.log(columna);
                 let index = casilleros.length;
 
 
@@ -195,7 +195,7 @@ canvas.addEventListener('click', function (e) {
                         casilleros[index - 1][0].setFill(lastClickedFigure.getFill());
                         casilleros[index - 1][1] = true;
                         casilleros[index - 1][0].draw();
-                        encontroPosicion = true;
+  5          
                         if (lastClickedFigure.getId() <= CANT_FIG) {
                             for (let i = 0; i < fichasJ1.length; i++) {
                                 if (fichasJ1[i].getId() == lastClickedFigure.getId()) {
@@ -223,9 +223,9 @@ canvas.addEventListener('click', function (e) {
                         //    console.log("seteado en ("+columna+","+casilleros[j][1]+")");
 
                     }
-                    console.log("CONTADOR: " + cont);
+                    //console.log("CONTADOR: " + cont);
                     index--;
-                    console.log(index);
+                    //console.log(index);
 
 
 
@@ -272,7 +272,7 @@ function dejarFichaCaer(x, y, yMax) {
 }
 
 
-  canvas.addEventListener('click', function (evt) {
+  /*canvas.addEventListener('click', function (evt) {
     //Poner un rectangulo blanco hasta arriba
     ctx.beginPath();
     ctx.fillStyle = "white";
@@ -334,9 +334,24 @@ function dejarFichaCaer(x, y, yMax) {
             return {x:mouseX,y:mouseY};
         }
     }
-}
+}*/
 
+
+function reiniciarJuego(){
+    esTableroInicial=true;
+    //borrar la cant de casilleros, no se si es necesario
+    fichasJ1.splice(0);
+    console.log(fichasJ1.length);
+    fichasJ2.splice(0);
+    console.log(fichasJ2.length);
+    tablero();
+    console.log("despues del draw" +fichasJ1.length);
+    addFigures();
+    console.log("despues del addFigures" +fichasJ1.length);
+    drawFigure();
+}
   
 canvas.addEventListener('mousedown', onMouseDown, false);
 canvas.addEventListener('mouseup', onMouseUp, false);
 canvas.addEventListener('mousemove', onMouseMove, false);
+document.getElementById("reiniciar").addEventListener("click",reiniciarJuego);

@@ -44,7 +44,7 @@ class Tablero{
             
         }
     }
-      console.log(this.casilleros); 
+      console.log("casilleros" +this.casilleros.length); 
     }
 
     getCasilleros(){
