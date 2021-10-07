@@ -272,6 +272,71 @@ function dejarFichaCaer(x, y, yMax) {
 }
 
 
+  canvas.addEventListener('click', function (evt) {
+    //Poner un rectangulo blanco hasta arriba
+    ctx.beginPath();
+    ctx.fillStyle = "white";
+    ctx.fillRect(0,0,tablerot.getCasillero()*7, tablerot.getCasillero());
+    ctx.stroke();
+    var mousePos =  posFiguraClickeada(evt);//etMousePos(evt);
+    for (var i = 0; i < tablerot.width; i += tablerot) {
+      if (mousePos.x > i && mousePos.y < i + tablerot.casillero) {
+        if(tableroJuego[i/100][0] !== undefined) break;
+        let topeY = llenarColumna(i/100) + 1;
+       // cambiarTurno();
+        dejarFichaCaer(i + tablerot.getCasillero()/2, tablerot.getCasillero()/2, topeY * tablerot.getCasillero() + tablerot.getCasillero()/2);
+        tablerot.style.pointerEvents = 'none';
+        // if(!yaGanoAlguien(i/100, topeY-1)){
+        //   setTimeout(function(){ 
+        //     tablero.style.pointerEvents = 'auto';
+        //   }, 500);
+        // } else{
+        //   // alertaGanador.style.display = "block";
+        //   // alertaGanador.style.color = color;
+        //   // alertaGanador.innerHTML = "GANÓ EL JUGADOR " + turno;
+        //   colorearfichasGandoras();
+        // }
+      }
+    }
+  });
+
+  function llenarColumna(numCol){
+    var numFila = 5;
+    while(numFila >= 0 && tableroJuego[numCol][numFila] != undefined){
+      numFila--;
+    }
+    if(numFila < 0) return;
+    //tableroJuego[numCol][numFila] = turno;
+    return numFila;
+  }
+
+  function getMousePos(evt) {
+    var mouseX = evt.offsetX * tablerot.width / tablerot.clientWidth;
+    var mouseY = evt.offsetY * tablerot.height / tablerot.clientHeight;
+    return {
+      x: mouseX,
+      y: mouseY
+    };
+  }
+
+  function posFiguraClickeada(evt){
+      let mouseX=evt.offsetX;
+      let mouseY=evt.offsetY;
+    for(let i=0; i<figures.length;i++){
+        const element=figures[i];
+        if(element.isPointInside(mouseX,mouseY)){
+            return {x:mouseX,y:mouseY};
+        }
+    }
+    for(let i=0; i<fichasJ2.length;i++){
+        const element=fichasJ2[i];
+        if(element.isPointInside(mouseX,mouseY)){
+            return {x:mouseX,y:mouseY};
+        }
+    }
+}
+
+  
 canvas.addEventListener('mousedown', onMouseDown, false);
 canvas.addEventListener('mouseup', onMouseUp, false);
 canvas.addEventListener('mousemove', onMouseMove, false);

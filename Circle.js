@@ -50,11 +50,10 @@ class Circle extends Figure{
     
     //se usa la distancia secudaria entre 2 puntos. 
     isPointInside(x,y){
-        let _x=this.posX - x;
         // console.log(x);
         // console.log(_x);//posicion del circulo - la posicion de donde esta el mouse
+        let _x=this.posX - x;//posicion del circulo - la posicion de donde esta el mouse
         let _y=this.posY - y;
-        console.log(Math.sqrt(_x*_x + _y*_y)< this.radius);
         return Math.sqrt(_x*_x + _y*_y)< this.radius;
         //si la distancia es menor al radio, estoy adentro del circulo
     }
