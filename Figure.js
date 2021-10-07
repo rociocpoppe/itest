@@ -7,6 +7,7 @@ class Figure {
         this.resaltado=false;
         this.resaltadoEstilo="red";
         this.ctx=context;
+        this.id;
     }
 
     setFill(fill){
@@ -46,4 +47,12 @@ class Figure {
     }
 
     isPoinInside(x,y){} //abstracto
+
+    setId(id){
+        this.id = id;
+    }
+
+    getId(){
+        return this.id;
+    }
 }

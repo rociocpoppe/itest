@@ -190,33 +190,34 @@ canvas.addEventListener('click', function (e) {
                 while (index > 0 || cont == 1) {
 
                     if (casilleros[index - 1][0].getPosX() == columna && casilleros[index - 1][1] == false && cont == 0) {
-                        //console.log("ENTRO AL IF");
+                        //console.log(casilleros[index - 1][0].getPosX(),casilleros[index - 1][0].getPosY() );
                         //console.log(lastClickedFigure);
-                        casilleros[index - 1][0].setFill(lastClickedFigure.getFill());
-                        casilleros[index - 1][1] = true;
-                        casilleros[index - 1][0].draw();
-  5          
-                        if (lastClickedFigure.getId() <= CANT_FIG) {
-                            for (let i = 0; i < fichasJ1.length; i++) {
-                                if (fichasJ1[i].getId() == lastClickedFigure.getId()) {
-                                    fichasJ1.splice(i, 1);
-                                    drawFigure();
+                      // if(!getGanador(casilleros[index - 1][0],casilleros)){
+                            casilleros[index - 1][0].setFill(lastClickedFigure.getFill());
+                            casilleros[index - 1][1] = true;
+                            casilleros[index - 1][0].draw();
+    5          
+                            if (lastClickedFigure.getId() <= CANT_FIG) {
+                                for (let i = 0; i < fichasJ1.length; i++) {
+                                    if (fichasJ1[i].getId() == lastClickedFigure.getId()) {
+                                        fichasJ1.splice(i, 1);
+                                        drawFigure();
+                                    }
+
+                                }
+                            } else {
+                                for (let i = 0; i < fichasJ2.length; i++) {
+                                    if (fichasJ2[i].getId() == lastClickedFigure.getId()) {
+                                        fichasJ2.splice(i, 1);
+                                        drawFigure();
+                                    }
+
                                 }
 
                             }
-                        } else {
-                            for (let i = 0; i < fichasJ2.length; i++) {
-                                if (fichasJ2[i].getId() == lastClickedFigure.getId()) {
-                                    fichasJ2.splice(i, 1);
-                                    drawFigure();
-                                }
-
-                            }
-
-                        }
                         //lastClickedFigure
                         cont = 1;
-
+                   // }        
                         //    let fila = casilleros[j][0].getPosY();
                         //    lastClickedFigure.setPosition(columna, fila);
                         //    lastClickedFigure.draw();
@@ -237,6 +238,52 @@ canvas.addEventListener('click', function (e) {
 
     }
 });
+
+
+
+let posWinners=[[0,0],[0,0],[0,0],[0,0]];
+
+function getGanador(ficha,casilleros){
+    //console.log(casilleros);
+    let xFicha=ficha.getPosX();
+    let yFicha=ficha.getPosY();
+    
+    let valorFicha = casilleros[xFicha][yFicha];
+    for(var i=0;i<8;i+=2){
+      
+      let lado1=fCount(dx[i],dy[i],xFicha+dy[i],yFicha+dx[i],valorFicha);
+      let lado2=fCount(dx[i+1],dy[i+1],xFicha+dy[i+1],yFicha+dx[i+1],valorFicha);
+      if(lado1+lado2+1>=4){
+        posi=0;
+        fCount2(dx[i],dy[i],xFicha+dy[i],yFicha+dx[i],valorFicha,posi);
+        fCount2(dx[i+1],dy[i+1],xFicha+dy[i+1],yFicha+dx[i+1],valorFicha,posi);
+        posWinners[posi]=[xFicha,yFicha];
+        return true; 
+      }
+    }  
+    return false;
+  }
+
+function fCount(mx,my,columna,fila,valorFicha){
+  if(fila<0 || fila>5 || columna<0 || columna>6)
+    return 0;
+  if(tableroI[columna][fila]!=valorFicha)
+    return 0;
+  return 1 + fCount(mx,my,columna+my,fila+mx,valorFicha);
+}
+var posi=0;
+function fCount2(mx,my,columna,fila,valorFicha)
+{
+  if(fila<0 || fila>5 || columna<0 || columna>6)
+    return;
+  if(tableroI[columna][fila]!=valorFicha)
+    return;
+  posWinners[posi] = [columna, fila];
+  posi++;
+  fCount2(mx,my,columna+my,fila+mx,valorFicha);
+}
+
+//para iniciar toma el valor de la posicion de la ficha en el tablero
 
 function onMouseUp(e) {
     isMouseDown = false;
@@ -339,17 +386,21 @@ function dejarFichaCaer(x, y, yMax) {
 
 function reiniciarJuego(){
     esTableroInicial=true;
-    //borrar la cant de casilleros, no se si es necesario
     fichasJ1.splice(0);
     console.log(fichasJ1.length);
     fichasJ2.splice(0);
     console.log(fichasJ2.length);
+    tableroI.getCasilleros().splice(0);
     tablero();
     console.log("despues del draw" +fichasJ1.length);
     addFigures();
     console.log("despues del addFigures" +fichasJ1.length);
     drawFigure();
 }
+
+
+
+
   
 canvas.addEventListener('mousedown', onMouseDown, false);
 canvas.addEventListener('mouseup', onMouseUp, false);
