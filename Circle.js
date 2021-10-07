@@ -4,19 +4,43 @@ class Circle extends Figure{
         super(posX,posY,fill,context)
         this.radius=radius;
         this.fillStyle=fill;
+        this.id;
     }
 
-    
+    getPosX(){
+        return this.posX;
+    }
+
+    getPosY(){
+        return this.posY;
+    }
+
+    setFill(fill){
+        this.fill = fill;
+    }
+
+    getFill(){
+        return this.fill;
+    }
+
+    setId(id){
+        this.id = id;
+    }
+
+    getId(){
+        return this.id;
+    }
+
     draw(){
         super.draw();
         this.ctx.beginPath();
         this.ctx.arc(this.posX,this.posY,this.radius,0,2*Math.PI);
         this.ctx.fill();
-        if(this.resaltado==true){
-            this.ctx.strokeStyle=this.resaltadoEstilo;
-            this.ctx.lineWidth=5;
-            this.ctx.stroke();
-        }
+        // if(this.resaltado==true){
+        //     this.ctx.strokeStyle=this.resaltadoEstilo;
+        //     this.ctx.lineWidth=5;
+        //     this.ctx.stroke();
+        // }
         this.ctx.closePath();
     }
 
@@ -27,7 +51,8 @@ class Circle extends Figure{
     //se usa la distancia secudaria entre 2 puntos. 
     isPointInside(x,y){
         let _x=this.posX - x;
-        console.log(_x);//posicion del circulo - la posicion de donde esta el mouse
+        // console.log(x);
+        // console.log(_x);//posicion del circulo - la posicion de donde esta el mouse
         let _y=this.posY - y;
         console.log(Math.sqrt(_x*_x + _y*_y)< this.radius);
         return Math.sqrt(_x*_x + _y*_y)< this.radius;
