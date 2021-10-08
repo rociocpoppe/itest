@@ -309,56 +309,58 @@ function chequeoVertical(id, fila, columna) {
     for (let i = 0; i < dificultad - 1; i++) {
         let idAux = "" + (fila + incremento) + columna;
         let casillero = casilleros.get(idAux);
+       if(casillero != undefined){
         if (casillero[1] == true &&
             casillero[0].getJugador() == casilleros.get(id)[0].getJugador()) {
             contLinea++;
             if (contLinea == dificultad) {
                 return true;
             }
-        } else {
+        } 
+        else {
             break;
         }
+       } 
         incremento += 100;
     }
 }
 
 function chequeoHorizontal(id, fila, columna) {  
+
     let contLinea = 1;
-    let incrementoIzq = 100;
-    let incrementoDer = 100;
-  
+    let incremento = 100;
 
-    for (let i = 0; i < dificultad - 1; i++) {
+    for (let i = 0; i < dificultad -1; i++) {
 
-        let idIzq = "" + fila + (columna - incrementoIzq);
+        let idIzq = ""+fila+(columna-incremento);
         let casilleroIzq = casilleros.get(idIzq);
-
-        if (casilleroIzq != undefined) {
-            if (casilleroIzq[1] == true &&
-                casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()) {
-                contLinea++;
-            }
-        }
-        incrementoIzq += 100;
-    }
-
-    for (let i = 0; i < dificultad - 1; i++) {
-
-        let idDer = "" + fila + (columna + incrementoDer);
-        // console.log(idDer);
+        let idDer = ""+fila+(columna+incremento);
         let casilleroDer = casilleros.get(idDer);
-        //console.log(casilleroDer);
-        if (casilleroDer != undefined) {
-            if (casilleroDer[1] == true &&
-                casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()) {
-                contLinea++;
-            }
-        } 
-        incrementoDer += 100;
-    }
 
-    if (contLinea >= dificultad) {
-        return true;
+        if(casilleroIzq[1] == true && 
+            casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()){
+                contLinea++;
+                if (contLinea == dificultad){
+                    return true;
+                }
+                else if(casilleroDer[1] == true && 
+                    casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()){
+                    contLinea++;
+                }
+
+        }else if (casilleroDer[1] == true && 
+            casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()){
+                contLinea++;
+                if (contLinea == dificultad){
+                    return true;
+                }
+                else if(casilleroIzq[1] == true && 
+                    casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()){
+                    contLinea++;
+                }
+        }
+
+    incremento+=100;
     }
 }
 
