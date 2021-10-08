@@ -5,6 +5,7 @@ class Circle extends Figure{
         this.radius=radius;
         this.fillStyle=fill;
         this.id;
+        this.jugador;
     }
 
     getPosX(){
@@ -27,6 +28,14 @@ class Circle extends Figure{
         this.id = id;
     }
 
+    setJugador(jugador){
+        this.jugador = jugador;
+    }
+
+    getJugador(){
+        return this.jugador;
+    }
+    
     getId(){
         return this.id;
     }
