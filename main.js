@@ -238,6 +238,7 @@ canvas.addEventListener('click', function (e) {
                             casilleros.get(id)[0].draw();
 
                             if (lastClickedFigure.getId() <= CANT_FIG) {
+                               
                                 turnoJ1 = false;
                                 turnoJ2 = true;
                                 casilleros.get(id)[0].setJugador(1);
@@ -248,6 +249,7 @@ canvas.addEventListener('click', function (e) {
                                         drawFigure();
                                     }
                                 }
+                                //document.getElementById("texto").innerHTML = "Es el turno del jugador 2 ";
                             }
 
                             else {
@@ -262,7 +264,7 @@ canvas.addEventListener('click', function (e) {
                                     }
 
                                 }
-
+                                //document.getElementById("texto").innerHTML = "Es el turno del jugador 1 ";
                             }
                             if (
                                 chequeoVertical(id, fila, columna) ||
@@ -273,7 +275,7 @@ canvas.addEventListener('click', function (e) {
 
                                 gano = true;
                                 ganador = casilleros.get(id)[0].getJugador();
-                                document.getElementById("texto").innerHTML = "Ganador jugador " + ganador;
+                                document.getElementById("texto").innerHTML = "GANADOR JUGADOR " + ganador + "!!!";
                             }
 
 
@@ -328,40 +330,51 @@ function chequeoVertical(id, fila, columna) {
 function chequeoHorizontal(id, fila, columna) {  
 
     let contLinea = 1;
-    let incremento = 100;
+    let incrementoIzq = 100;
+    let incrementoDer = 100;
+  
 
-    for (let i = 0; i < dificultad -1; i++) {
+    for (let i = 0; i < dificultad - 1; i++) {
 
-        let idIzq = ""+fila+(columna-incremento);
+        let idIzq = "" + fila  + (columna - incrementoIzq);
         let casilleroIzq = casilleros.get(idIzq);
-        let idDer = ""+fila+(columna+incremento);
-        let casilleroDer = casilleros.get(idDer);
 
-        if(casilleroIzq[1] == true && 
-            casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()){
+        if (casilleroIzq != undefined) {
+            if (casilleroIzq[1] == true &&
+                casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
-                if (contLinea == dificultad){
-                    return true;
-                }
-                else if(casilleroDer[1] == true && 
-                    casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()){
-                    contLinea++;
-                }
-
-        }else if (casilleroDer[1] == true && 
-            casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()){
-                contLinea++;
-                if (contLinea == dificultad){
-                    return true;
-                }
-                else if(casilleroIzq[1] == true && 
-                    casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()){
-                    contLinea++;
-                }
+            }
+            else{
+                break;
+            }
         }
-
-    incremento+=100;
+        incrementoIzq += 100;
     }
+
+    for (let i = 0; i < dificultad - 1; i++) {
+
+        let idDer = "" + fila + (columna + incrementoDer);
+        // console.log(idDer);
+        let casilleroDer = casilleros.get(idDer);
+        //console.log(casilleroDer);
+        if (casilleroDer != undefined) {
+            if (casilleroDer[1] == true &&
+                casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()) {
+                contLinea++;
+                
+            }
+            else{
+                break;
+            }
+        } 
+        incrementoDer += 100;
+    }
+
+    if (contLinea >= dificultad) {
+        return true;
+    }
+
+
 }
 
 function chequeoDiagonalUno(id, fila, columna) {
@@ -381,6 +394,9 @@ function chequeoDiagonalUno(id, fila, columna) {
                 casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
             }
+            else{
+                break;
+            }
         }
         incrementoIzq += 100;
     }
@@ -395,6 +411,9 @@ function chequeoDiagonalUno(id, fila, columna) {
             if (casilleroDer[1] == true &&
                 casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
+            }
+            else{
+                break;
             }
         } 
         incrementoDer += 100;
@@ -421,6 +440,9 @@ function chequeoDiagonalDos(id, fila, columna) {
                 casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
             }
+            else{
+                break;
+            }
         }
         incrementoIzq += 100;
     }
@@ -435,6 +457,9 @@ function chequeoDiagonalDos(id, fila, columna) {
             if (casilleroDer[1] == true &&
                 casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
+            }
+            else{
+                break;
             }
         } 
         incrementoDer += 100;
@@ -496,7 +521,7 @@ function onMouseUp(e) {
 function onMouseMove(e) {
 
     //si tengo el mouse abajo y tengo una figura seleccionada, a la figura le pongo la nueva posicion y la dibujo de nuevo
-    if (isMouseDown && lastClickedFigure != null && esTurno() && !ganador) {
+    if (isMouseDown && lastClickedFigure != null && esTurno() && !gano) {
         lastClickedFigure.setPosition(e.layerX, e.layerY);
 
         drawFigure();
@@ -596,6 +621,10 @@ function posFiguraClickeada(evt){
 
 function reiniciarJuego() {
     esTableroInicial = true;
+    gano = false;
+    turnoJ1 = true;
+    turnoJ2 = false;
+    document.getElementById("texto").innerHTML = "";
     fichasJ1.splice(0);
     fichasJ2.splice(0);
     tableroI.getCasilleros().clear();
