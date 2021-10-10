@@ -337,6 +337,9 @@ canvas.addEventListener('click', function (e) {
                                 //gano en verdadero y se obtiene el id del ganador para imprimirlo en el DOM
                                     gano = true;
                                     ganador = casilleros.get(id)[0].getJugador();
+                                    clearInterval(temp);
+                                    segundos = 59;
+                                    minutos = 4;
                                     document.getElementById("texto").innerHTML = "GANADOR JUGADOR " + ganador + " !!!";
                                 }
 
