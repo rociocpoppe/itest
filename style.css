@@ -1,0 +1,34 @@
+canvas {
+    border: solid 1px black;
+}
+
+.canvas{
+    text-align: center;
+}
+
+body {
+    background-image:url("fondo1.jpeg");
+    background-position-x: 100%;
+}
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+
+
+}
+
+.primero, .ultimo{
+    width: 15%;
+    text-align: center;
+    margin-top: 50px;
+    
+}
+.primero{
+    margin-right: 52px;
+    
+}
+button{
+    font-size: 25px;
+    margin: 10px;
+}

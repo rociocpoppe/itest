@@ -1,23 +1,44 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title>Parte 2-Objetos</title>
-	</head>
-	<body>
-       
-        <canvas id="canvas" width="1200" height="800"> </canvas>
-		<h1 id="texto"></h1>
-		<button id="reiniciar" type="button">Reiniciar</button>
 
-        <script src="Figure.js"></script>
-        <script src="Circle.js"></script>
-        <script src="Rect.js"></script>
-		<script src="Jugador.js"></script>
-		<script src="Tablero.js"></script>
-		<script src="Reloj.js"></script>
-        <script src="main.js"></script>
-	</body>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>Parte 2-Objetos</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+	<div class="container">
+		<div class="primero">
+			<button id="cuatro" type="button">4 en línea</button>
+			<button id="cinco" type="button">5 en línea</button>
+			<button id="seis" type="button">6 en línea</button>
+			<button id="siete" type="button">7 en línea</button>
+
+		</div>
+
+		<div class="canvas">
+			<canvas id="canvas" width="1200" height="1000"> </canvas>
+		</div>
+
+		<div class="ultimo">
+			<button id="reiniciar" type="button">Reiniciar</button>
+			<h1 id="texto"></h1>
+		</div>
+
+	</div>
+
+
+
+	<script src="Figure.js"></script>
+	<script src="Circle.js"></script>
+	<script src="Rect.js"></script>
+	<script src="Jugador.js"></script>
+	<script src="Tablero.js"></script>
+	<script src="Reloj.js"></script>
+	<script src="main.js"></script>
+</body>
 
 </html>
 
