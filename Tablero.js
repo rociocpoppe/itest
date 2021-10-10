@@ -11,38 +11,38 @@ class Tablero {
         this.columna = 0;
 
     }
-    //let numero = 125;
-    //console.log("CONVIERTO EL NUMERO 125 A BINARIO: numero.toString(2));  //"1111101"  
-    //console.log("CONVIERTO EL NUMERO 1111101 A DECIMAL: parseInt(11001,2));  //"125"
 
 
     dibujarTablero(esTableroInicial) {
-        
-        // console.log("CONVIERTO EL NUMERO 125 A BINARIO: " + numero.toString(2));  //"1111101"  
-        // console.log("CONVIERTO EL NUMERO 1111101 A DECIMAL: " + parseInt(1111101, 2));  //"125"
+        let px = canvasWidth/2 - this.width/2;
+        let py = canvasHeight - this.height;
+        console.log(px);
+        console.log(py);
+
 
         ctx.fillStyle = "#66B2FF";
-        ctx.fillRect(0, 100, this.width, this.height);
+        ctx.fillRect(px, py, this.width, this.height);//0,100,this.width, this.height
 
         if (esTableroInicial) {
-            for (let i = 100; i < 800; i += this.casillero) {
-                this.fila++;
-                for (let j = 0; j < 700; j += this.casillero) {
-                    if (j == 0) {
-                        this.columna = 1;
-                    } else {
-                        this.columna++;
-                    }
+            for (let i = py; i < this.width+py; i += this.casillero) {
+                //this.fila++;
+                for (let j = px ; j <  this.height+px; j += this.casillero) {
+                   // if (j == 0) {
+                    //     this.columna = 1;
+                    // } else {
+                    //     this.columna++;
+                    // }
                     let casillero = new Circle(j + this.mitad, i + this.mitad, 35, "#ffffff", this.ctx);
                     casillero.draw();
-                    let dataCasillero = [casillero, false, this.fila, this.columna];
+                    let dataCasillero = [casillero, false];//, this.fila, this.columna
                    // this.casilleros.push(dataCasillero);
                    this.casilleros.set(""+(i + this.mitad)+(j + this.mitad), dataCasillero);
                    //this.casilleros.set(id, dato) id= posXposY -> 15050
 
                     // this.clearCircle(x + this.mitad, y + this.mitad, 35);
                 }
-            }console.log(this.casilleros);
+            }
+            //console.log(this.casilleros);
         }
         else {
 
@@ -55,7 +55,7 @@ class Tablero {
 
             // }
         }
-        //console.log("casilleros" +this.casilleros.length); 
+        console.log(this.casilleros); 
     }
 
     getCasilleros() {
