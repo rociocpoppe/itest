@@ -1,7 +1,5 @@
 /* *****************************************************************************************
 COSAS PARA HACER:
-- Asignar turnos
-- Saber si hay un ganador y quien es
 - Las piezas de cada jugador se dibujan con una imagen
 - Se debe poder reiniciar el juego, (hace otros 49 casilleros, no los reinicia)
 - Colocar un timer que limite el tiempo de juego.
@@ -10,38 +8,21 @@ COSAS PARA HACER:
 - Cortar las imagenes para la ficha redonda
 *******************************************************************************************/
 
-
-
+//se obtiene el canvas donde se va a trabajar y su contexto. 
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 let canvasWidth = canvas.width;
 let canvasHeight = canvas.height;
-let esTableroInicial = true;
 
+//se definen todas las variables globales que se utilizarán en el código
+let esTableroInicial = true;
 const CANT_FIG = 25;
 let dificultad = 4;
 let dimX = 600;
 let dimY = 600;
 let tableroI = new Tablero(ctx, dimX, dimY);
 let casilleros = tableroI.getCasilleros();
-
 let mousedown = false;
-
-// let tableroJuego = [];
-// for (let i = 0; i < 7; i++) {
-//     tableroJuego[i] = new Array(6);//agrega 6 posiciones vacias al arreglo (el alto del tablero)
-//     //console.log(tableroJuego[i]);
-// }
-
-// let game= new Juego(ctxJuego,juego.width, juego.height);
-// game.dibujarJuego();
-
-
-//tablerot.dibujarTablero();
-
-
-
-
 let lastClickedFigure = null;
 let isMouseDown = false;
 let fichasJ1 = [];
@@ -82,6 +63,9 @@ function cargarImagenDos() {
     return imagen_2;
 }
 
+
+//se determina la dificultad del juego, siendo 4 la opción predeterminada. Se puede jugar además con las opciones de 
+//5,6 o 7 en linea. Dentro de cada if se setean las medidas del tablero correspondiente a cada caso del juego
 function setDificultad(e){
 
     if(e.target.id == "cuatro"){
@@ -113,6 +97,9 @@ function setDificultad(e){
 
 }
 
+//dibuja las figuras necesarias para el juego. Primero se borra el canvas y luego, se dibujan las fichas del jugador 1 y 
+//jugador 2. Además se setea por cada ficha un id para poder luego identificarlas. También se dibuja el tablero si
+// no es la primera vez que se carga.
 function drawFigure() {
     clearCanvas();
     //cada vez que muevo uno, se va borrando todo y re dibujando
@@ -132,16 +119,18 @@ function drawFigure() {
 
 }
 
+//lama a la función
 addFigures();
+
+//lama a la función
 tablero();
+
+//Si es la primera vez que se carga, se dibuja el tablero y se setea en falso la variable esTableroInicial para
+//que luego cada vez que se muevan las fichas, se borre el canvas y se vuelva a redibujar el tablero pero con las 
+//posiciones ya ocupadas en él.
 function tablero() {
-    // if (!esTableroInicial) {
-    //     let tablero = new Tablero(ctx, 700, 700);
-    //     tablero.dibujarTablero(esTableroInicial);
-    // } else {
     tableroI.dibujarTablero(esTableroInicial);
     esTableroInicial = false;
-    // }
 
 }
 
@@ -156,6 +145,11 @@ function tablero() {
 
 // }
 
+
+//se agregan las fichas del jugador1 y del jugador 2. Para agregarlas se tiene en cuenta que la cantidad de fichas sea 
+//menor a la cantidad de fichas necesarias para cada participante. Cada vez que realiza la iteración, se crea una instancia
+//de circle (que sería nuestra ficha redonda) y se le pasan los parámetros necesarios para poder dibujarla.
+//Luego, se inserta la ficha en el arreglo de fichas de cada jugador.
 function addCircle() {
     //let color=randomRGBA();
     for (let i = 0; i < CANT_FIG; i++) {
@@ -169,9 +163,7 @@ function addCircle() {
 
 }
 
-
-
-
+//crea las figuras para nuestras fichas y llama a la función draFigures que se encargar de dibujar/redibujar el canvas
 function addFigures() {
 
     addCircle();
@@ -179,12 +171,14 @@ function addFigures() {
 
 }
 
+//borra el canvas completo, estableciendo como relleno el color blanco
 function clearCanvas() {
     ctx.fillStyle = "#FFFFFF";
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 }
 
-
+//se recorren las fichas de ambos jugadores y se pregunta a la clase circle si la posición está dentro de la 
+//ficha. En caso de que esté, nos devuelve la ficha.
 function findClickedFigure(x, y) {
     for (let i = 0; i < fichasJ1.length; i++) {
         const element = fichasJ1[i];
@@ -200,6 +194,10 @@ function findClickedFigure(x, y) {
     }
 }
 
+
+//se llama una vez que se apreta el boton izquierdo del mouse.Sirve para obtener la posición clickeada y preguntar
+//si esa posición esté dentro de alguna de las fichas. En caso de que encuentre alguna ficha en esa posición,
+//la ultima imagen clickeada se vuelve la imagen que retorna la funcion findClickedFigure
 function onMouseDown(e) {
     isMouseDown = true;
     if (lastClickedFigure != null) {
@@ -216,6 +214,10 @@ function onMouseDown(e) {
 
 }
 
+
+//se determina el turno de los jugadores. Por default, se decidió que el jugador 1 siempre comience el juego.
+//Para obtener el turno de quien corresponda, se utiliza el id de la última imagen clickeada. Luego de obtener el 
+//turno, se cambia la variable turno, para que en la próxima iteración tenga turno el otro jugador.
 function esTurno() {
     let jugador = "";
 
@@ -245,18 +247,11 @@ function esTurno() {
 
 canvas.addEventListener('click', function (e) {
     let cont = 0;
-
-
-
     if (lastClickedFigure != null && esTurno() && !gano) {
-
-
         //        isMouseDown = false;
         let _x = e.layerX;
         let _y = e.layerY;
         //MAP -> [ ID, [casillero, false, fila, columna] ]
-
-
         for (const [id, dataCasillero] of casilleros) {
             if (!gano) {
                 // for (let i = 0; i < casilleros.length; i++) {//49 pos
@@ -282,11 +277,13 @@ canvas.addEventListener('click', function (e) {
                                 casilleros.get(id)[1] = true;
                                 casilleros.get(id)[0].draw();
 
+                                //se chequea si el id de la última imagen clickeada es del jugador 1
                                 if (lastClickedFigure.getId() <= CANT_FIG) {
-
                                     turnoJ1 = false;
                                     turnoJ2 = true;
                                     casilleros.get(id)[0].setJugador(1);
+                                    //si el id de la ficha en la posición es igual al id de la última figura 
+                                    //clickeada, se borra la ficha en esa posición, y se dibuja. 
                                     for (let i = 0; i < fichasJ1.length; i++) {
                                         if (fichasJ1[i].getId() == lastClickedFigure.getId()) {
                                             fichasJ1.splice(i, 1);
@@ -296,7 +293,6 @@ canvas.addEventListener('click', function (e) {
                                     }
                                     //document.getElementById("texto").innerHTML = "Es el turno del jugador 2 ";
                                 }
-
                                 else {
                                     turnoJ1 = true;
                                     turnoJ2 = false;
@@ -311,6 +307,7 @@ canvas.addEventListener('click', function (e) {
                                     }
                                     //document.getElementById("texto").innerHTML = "Es el turno del jugador 1 ";
                                 }
+                                //se corrobora si hay ganador. Para esto se chequea vertical, horizontal y diagonales
                                 if (
                                     chequeoVertical(id, fila, columna) ||
                                     chequeoHorizontal(id, fila, columna) ||
@@ -318,6 +315,9 @@ canvas.addEventListener('click', function (e) {
                                     chequeoDiagonalDos(id, fila, columna)
                                 ) {
 
+                                //en caso de que haya la cantidad de fichas requeridas para ganar 
+                                //(4,5,6  o 7 en linea, de acuerdo al juego elegido), se setea la variable 
+                                //gano en verdadero y se obtiene el id del ganador para imprimirlo en el DOM
                                     gano = true;
                                     ganador = casilleros.get(id)[0].getJugador();
                                     document.getElementById("texto").innerHTML = "GANADOR JUGADOR " + ganador + "!!!";
@@ -517,48 +517,7 @@ function chequeoDiagonalDos(id, fila, columna) {
 
 }
 
-let posWinners = [[0, 0], [0, 0], [0, 0], [0, 0]];
 
-function getGanador(ficha, casilleros) {
-    //console.log(casilleros);
-    let xFicha = ficha.getPosX();
-    let yFicha = ficha.getPosY();
-
-    let valorFicha = casilleros[xFicha][yFicha];
-    for (var i = 0; i < 8; i += 2) {
-
-        let lado1 = fCount(dx[i], dy[i], xFicha + dy[i], yFicha + dx[i], valorFicha);
-        let lado2 = fCount(dx[i + 1], dy[i + 1], xFicha + dy[i + 1], yFicha + dx[i + 1], valorFicha);
-        if (lado1 + lado2 + 1 >= 4) {
-            posi = 0;
-            fCount2(dx[i], dy[i], xFicha + dy[i], yFicha + dx[i], valorFicha, posi);
-            fCount2(dx[i + 1], dy[i + 1], xFicha + dy[i + 1], yFicha + dx[i + 1], valorFicha, posi);
-            posWinners[posi] = [xFicha, yFicha];
-            return true;
-        }
-    }
-    return false;
-}
-
-function fCount(mx, my, columna, fila, valorFicha) {
-    if (fila < 0 || fila > 5 || columna < 0 || columna > 6)
-        return 0;
-    if (tableroI[columna][fila] != valorFicha)
-        return 0;
-    return 1 + fCount(mx, my, columna + my, fila + mx, valorFicha);
-}
-var posi = 0;
-function fCount2(mx, my, columna, fila, valorFicha) {
-    if (fila < 0 || fila > 5 || columna < 0 || columna > 6)
-        return;
-    if (tableroI[columna][fila] != valorFicha)
-        return;
-    posWinners[posi] = [columna, fila];
-    posi++;
-    fCount2(mx, my, columna + my, fila + mx, valorFicha);
-}
-
-//para iniciar toma el valor de la posicion de la ficha en el tablero
 
 function onMouseUp(e) {
     isMouseDown = false;
@@ -566,7 +525,8 @@ function onMouseUp(e) {
 
 function onMouseMove(e) {
 
-    //si tengo el mouse abajo y tengo una figura seleccionada, a la figura le pongo la nueva posicion y la dibujo de nuevo
+    //si tengo el mouse abajo y tengo una figura seleccionada, a la figura le pongo la nueva posicion 
+    //y la dibujo de nuevo
     if (isMouseDown && lastClickedFigure != null && esTurno() && !gano) {
         lastClickedFigure.setPosition(e.layerX, e.layerY);
 
@@ -577,21 +537,6 @@ function onMouseMove(e) {
 }
 
 
-// ANIMAR FICHA CAYENDO
-function dejarFichaCaer(x, y, yMax) {
-    ctx.clearRect(x - tableroI.getCasillero() / 2, 0, tableroI.getCasillero(), yMax);///############ACA CAMBIE NOMBRE DE LA VARIABLE TABLERO
-    ctx.beginPath();
-    ctx.arc(x, y, 35, 0, Math.PI * 2);
-    ctx.strokeStyle = "white";
-    ctx.fillStyle = "blue";
-    ctx.fill();
-    ctx.stroke();
-    if (y !== yMax) {
-        y += 10;
-        setTimeout('dejarFichaCaer(' + x + ',' + y + ', ' + yMax + ')', 1);
-    }
-    return;
-}
 
 
 
@@ -625,3 +570,4 @@ document.getElementById("cuatro").addEventListener("click", setDificultad);
 document.getElementById("cinco").addEventListener("click", setDificultad);
 document.getElementById("seis").addEventListener("click", setDificultad);
 document.getElementById("siete").addEventListener("click", setDificultad);
+document.getElementById("reiniciar").addEventListener("click", reiniciarJuego);
