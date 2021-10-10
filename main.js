@@ -20,22 +20,10 @@ let esTableroInicial = true;
 
 const CANT_FIG = 25;
 let dificultad = 4;
-
-// fichita();
-// function fichita(){
-
-
-//     var imagen = new Image();
-//     imagen.src = "4.png";
-//     imagen.onload = function(){
-//            var image = ctx.createPattern(imagen,"repeat");
-//     ctx.rect(1100, 700, 200, 200);
-//     ctx.fillStyle = image;
-//     ctx.fill();
-//     }
-
-
-// }
+let dimX = 600;
+let dimY = 600;
+let tableroI = new Tablero(ctx, dimX, dimY);
+let casilleros = tableroI.getCasilleros();
 
 let mousedown = false;
 
@@ -48,8 +36,7 @@ let mousedown = false;
 // let game= new Juego(ctxJuego,juego.width, juego.height);
 // game.dibujarJuego();
 
-let tableroI = new Tablero(ctx, 700, 700);
-let casilleros = tableroI.getCasilleros();
+
 //tablerot.dibujarTablero();
 
 
@@ -64,11 +51,66 @@ let turnoJ2 = false;
 let ganador;
 let gano = false;
 
-function addFigure() {
+// function addFigure() {
 
-    addCircle();
+//     addCircle();
 
-    drawFigure();
+//     drawFigure();
+// }
+// let imagen_1 = document.querySelector("#tres");
+let imagen_1 = new Image();
+function cargarImagenUno() {
+    imagen_1.src = "3.png";
+    imagen_1.onload = function () {
+        //console.log(imagen_1);
+        //ctx.drawImage(this.imagen_1, this.posX - this.radius, this.posY- this.radius, this.radius * 2 , this.radius * 2);
+        //return imagen_1;
+    }
+    return imagen_1;
+}
+
+// let imagen_2 = document.querySelector("#cuatro");
+let imagen_2 = new Image();
+function cargarImagenDos() {
+    imagen_2.src = "4.png";
+    imagen_2.onload = function () {
+        //console.log(imagen_2);
+        //ctx.drawImage(this.imagen_2, this.posX - this.radius, this.posY- this.radius, this.radius * 2 , this.radius * 2);
+        //console.log(imagen_2);
+
+    }
+    return imagen_2;
+}
+
+function setDificultad(e){
+
+    if(e.target.id == "cuatro"){
+        console.log("cuatro")
+        dificultad = 4;
+        dimX = 600;
+
+    }
+    else if(e.target.id == "cinco"){
+        console.log("cinco")
+        dificultad = 5;
+        dimX = 700;
+    }
+    else if(e.target.id == "seis"){
+        console.log("seis")
+        dificultad = 6;
+        dimX = 800;
+    }
+    else{
+        console.log("siete")
+        dificultad = 7;
+        dimX = 900;
+    }
+  
+    // addFigures();
+    // tablero();
+    // drawFigure();
+
+
 }
 
 function drawFigure() {
@@ -77,10 +119,12 @@ function drawFigure() {
     for (let i = 0; i < fichasJ1.length; i++) {
         fichasJ1[i].setId(i + 1);
         fichasJ1[i].draw();
+        // console.log( fichasJ1[i]);
     }
     for (let i = 0; i < fichasJ2.length; i++) {
         fichasJ2[i].setId(i + CANT_FIG + 1);
         fichasJ2[i].draw();
+        //console.log( fichasJ2[i]);
     }
     if (!esTableroInicial) {
         tablero();
@@ -115,9 +159,9 @@ function tablero() {
 function addCircle() {
     //let color=randomRGBA();
     for (let i = 0; i < CANT_FIG; i++) {
-        let circle1 = new Circle(800, 200, 35, "blue", ctx)
+        let circle1 = new Circle( 50, canvasHeight - 200, 35, "blue", ctx);
         fichasJ1.push(circle1);
-        let circle2 = new Circle(1100, 200, 35, "red", ctx)
+        let circle2 = new Circle(canvasWidth - 50, canvasHeight - 200, 35, "red", ctx);
         fichasJ2.push(circle2);
 
     }
@@ -129,13 +173,10 @@ function addCircle() {
 
 
 function addFigures() {
-    addFigure();
-    if (fichasJ1.length < CANT_FIG) {
-        setTimeout(addFigures, 333);
-    }
-    if (fichasJ2.length < CANT_FIG) {
-        setTimeout(addFigures, 333);
-    }
+
+    addCircle();
+    drawFigure();
+
 }
 
 function clearCanvas() {
@@ -165,7 +206,8 @@ function onMouseDown(e) {
         lastClickedFigure.setResaltado(false);
         lastClickedFigure = null;
     }
-    let clickFig = findClickedFigure(e.layerX, e.layerY)//coordenadas de x e y dentro del canvas
+    let clickFig = findClickedFigure(e.layerX, e.layerY);//coordenadas de x e y dentro del canvas
+
     if (clickFig != null) {
         clickFig.setResaltado(true);
         lastClickedFigure = clickFig;
@@ -211,6 +253,7 @@ canvas.addEventListener('click', function (e) {
 
         //        isMouseDown = false;
         let _x = e.layerX;
+        let _y = e.layerY;
         //MAP -> [ ID, [casillero, false, fila, columna] ]
 
 
@@ -221,78 +264,81 @@ canvas.addEventListener('click', function (e) {
                 //console.log("ENTRO AL FOR");
                 if (_x < dataCasillero[0].getPosX() + dataCasillero[0].getRadius() &&
                     _x > dataCasillero[0].getPosX() - dataCasillero[0].getRadius()) {
-                    //console.log("FOR FOR");
-                    let columna = dataCasillero[0].getPosX();
-                    // console.log(columna);
 
-                    let fila = tableroI.getHeight() + 50;
+                  if (_y <= canvasHeight - tableroI.getHeight()) {
+                       
+                        let columna = dataCasillero[0].getPosX();
+                        // console.log(columna);
 
-                    while (fila > 149 && cont != 1) {
-                        let id = "" + fila + columna;  // id = ""+fila+100+columna;
-                        // console.log(id);
-                        if (casilleros.get(id)[1] == false && cont == 0) {
+                        let fila = canvasHeight - 50 //tableroI.getHeight() + 50;
 
-                            casilleros.get(id)[0].setFill(lastClickedFigure.getFill());
-                            casilleros.get(id)[0].setId(lastClickedFigure.getId());
-                            casilleros.get(id)[1] = true;
-                            casilleros.get(id)[0].draw();
+                        while (fila > canvasHeight - tableroI.getHeight() - 49 && cont != 1) {
+                            let id = "" + fila + columna;  // id = ""+fila+100+columna;
+                            console.log(id);
+                            if (casilleros.get(id)[1] == false && cont == 0) {
 
-                            if (lastClickedFigure.getId() <= CANT_FIG) {
-                               
-                                turnoJ1 = false;
-                                turnoJ2 = true;
-                                casilleros.get(id)[0].setJugador(1);
-                                for (let i = 0; i < fichasJ1.length; i++) {
-                                    if (fichasJ1[i].getId() == lastClickedFigure.getId()) {
-                                        fichasJ1.splice(i, 1);
+                                casilleros.get(id)[0].setFill(lastClickedFigure.getFill());
+                                casilleros.get(id)[0].setId(lastClickedFigure.getId());
+                                casilleros.get(id)[1] = true;
+                                casilleros.get(id)[0].draw();
 
-                                        drawFigure();
+                                if (lastClickedFigure.getId() <= CANT_FIG) {
+
+                                    turnoJ1 = false;
+                                    turnoJ2 = true;
+                                    casilleros.get(id)[0].setJugador(1);
+                                    for (let i = 0; i < fichasJ1.length; i++) {
+                                        if (fichasJ1[i].getId() == lastClickedFigure.getId()) {
+                                            fichasJ1.splice(i, 1);
+
+                                            drawFigure();
+                                        }
                                     }
+                                    //document.getElementById("texto").innerHTML = "Es el turno del jugador 2 ";
                                 }
-                                //document.getElementById("texto").innerHTML = "Es el turno del jugador 2 ";
-                            }
 
-                            else {
-                                turnoJ1 = true;
-                                turnoJ2 = false;
-                                casilleros.get(id)[0].setJugador(2);
-                                for (let i = 0; i < fichasJ2.length; i++) {
-                                    if (fichasJ2[i].getId() == lastClickedFigure.getId()) {
-                                        fichasJ2.splice(i, 1);
+                                else {
+                                    turnoJ1 = true;
+                                    turnoJ2 = false;
+                                    casilleros.get(id)[0].setJugador(2);
+                                    for (let i = 0; i < fichasJ2.length; i++) {
+                                        if (fichasJ2[i].getId() == lastClickedFigure.getId()) {
+                                            fichasJ2.splice(i, 1);
 
-                                        drawFigure();
+                                            drawFigure();
+                                        }
+
                                     }
-
+                                    //document.getElementById("texto").innerHTML = "Es el turno del jugador 1 ";
                                 }
-                                //document.getElementById("texto").innerHTML = "Es el turno del jugador 1 ";
+                                if (
+                                    chequeoVertical(id, fila, columna) ||
+                                    chequeoHorizontal(id, fila, columna) ||
+                                    chequeoDiagonalUno(id, fila, columna) ||
+                                    chequeoDiagonalDos(id, fila, columna)
+                                ) {
+
+                                    gano = true;
+                                    ganador = casilleros.get(id)[0].getJugador();
+                                    document.getElementById("texto").innerHTML = "GANADOR JUGADOR " + ganador + "!!!";
+                                }
+
+
+                                cont = 1;
+
                             }
-                            if (
-                                chequeoVertical(id, fila, columna) ||
-                                chequeoHorizontal(id, fila, columna) 
-                                ||chequeoDiagonalUno(id, fila, columna)||
-                                chequeoDiagonalDos(id, fila, columna)
-                            ) {
-
-                                gano = true;
-                                ganador = casilleros.get(id)[0].getJugador();
-                                document.getElementById("texto").innerHTML = "GANADOR JUGADOR " + ganador + "!!!";
-                            }
 
 
-                            cont = 1;
+                            fila -= 100;
 
                         }
 
-
-                        fila -= 100;
-                        console.log(fila);
-
-
-
+                    }else{
+                        let px = canvasWidth - 75;
+                        lastClickedFigure.setPosition(px, _y);
+                        lastClickedFigure.draw();
                     }
-
                 }
-
             } else {
                 break;
             }
@@ -311,32 +357,32 @@ function chequeoVertical(id, fila, columna) {
     for (let i = 0; i < dificultad - 1; i++) {
         let idAux = "" + (fila + incremento) + columna;
         let casillero = casilleros.get(idAux);
-       if(casillero != undefined){
-        if (casillero[1] == true &&
-            casillero[0].getJugador() == casilleros.get(id)[0].getJugador()) {
-            contLinea++;
-            if (contLinea == dificultad) {
-                return true;
+        if (casillero != undefined) {
+            if (casillero[1] == true &&
+                casillero[0].getJugador() == casilleros.get(id)[0].getJugador()) {
+                contLinea++;
+                if (contLinea == dificultad) {
+                    return true;
+                }
             }
-        } 
-        else {
-            break;
+            else {
+                break;
+            }
         }
-       } 
         incremento += 100;
     }
 }
 
-function chequeoHorizontal(id, fila, columna) {  
+function chequeoHorizontal(id, fila, columna) {
 
     let contLinea = 1;
     let incrementoIzq = 100;
     let incrementoDer = 100;
-  
+
 
     for (let i = 0; i < dificultad - 1; i++) {
 
-        let idIzq = "" + fila  + (columna - incrementoIzq);
+        let idIzq = "" + fila + (columna - incrementoIzq);
         let casilleroIzq = casilleros.get(idIzq);
 
         if (casilleroIzq != undefined) {
@@ -344,7 +390,7 @@ function chequeoHorizontal(id, fila, columna) {
                 casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
             }
-            else{
+            else {
                 break;
             }
         }
@@ -361,12 +407,12 @@ function chequeoHorizontal(id, fila, columna) {
             if (casilleroDer[1] == true &&
                 casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
-                
+
             }
-            else{
+            else {
                 break;
             }
-        } 
+        }
         incrementoDer += 100;
     }
 
@@ -382,7 +428,7 @@ function chequeoDiagonalUno(id, fila, columna) {
     let contLinea = 1;
     let incrementoIzq = 100;
     let incrementoDer = 100;
-  
+
 
     for (let i = 0; i < dificultad - 1; i++) {
 
@@ -394,7 +440,7 @@ function chequeoDiagonalUno(id, fila, columna) {
                 casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
             }
-            else{
+            else {
                 break;
             }
         }
@@ -412,10 +458,10 @@ function chequeoDiagonalUno(id, fila, columna) {
                 casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
             }
-            else{
+            else {
                 break;
             }
-        } 
+        }
         incrementoDer += 100;
     }
 
@@ -428,7 +474,7 @@ function chequeoDiagonalDos(id, fila, columna) {
     let contLinea = 1;
     let incrementoIzq = 100;
     let incrementoDer = 100;
-  
+
 
     for (let i = 0; i < dificultad - 1; i++) {
 
@@ -440,7 +486,7 @@ function chequeoDiagonalDos(id, fila, columna) {
                 casilleroIzq[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
             }
-            else{
+            else {
                 break;
             }
         }
@@ -458,10 +504,10 @@ function chequeoDiagonalDos(id, fila, columna) {
                 casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()) {
                 contLinea++;
             }
-            else{
+            else {
                 break;
             }
-        } 
+        }
         incrementoDer += 100;
     }
 
@@ -548,69 +594,6 @@ function dejarFichaCaer(x, y, yMax) {
 }
 
 
-/*canvas.addEventListener('click', function (evt) {
-  //Poner un rectangulo blanco hasta arriba
-  ctx.beginPath();
-  ctx.fillStyle = "white";
-  ctx.fillRect(0,0,tablerot.getCasillero()*7, tablerot.getCasillero());
-  ctx.stroke();
-  var mousePos =  posFiguraClickeada(evt);//etMousePos(evt);
-  for (var i = 0; i < tablerot.width; i += tablerot) {
-    if (mousePos.x > i && mousePos.y < i + tablerot.casillero) {
-      if(tableroJuego[i/100][0] !== undefined) break;
-      let topeY = llenarColumna(i/100) + 1;
-     // cambiarTurno();
-      dejarFichaCaer(i + tablerot.getCasillero()/2, tablerot.getCasillero()/2, topeY * tablerot.getCasillero() + tablerot.getCasillero()/2);
-      tablerot.style.pointerEvents = 'none';
-      // if(!yaGanoAlguien(i/100, topeY-1)){
-      //   setTimeout(function(){ 
-      //     tablero.style.pointerEvents = 'auto';
-      //   }, 500);
-      // } else{
-      //   // alertaGanador.style.display = "block";
-      //   // alertaGanador.style.color = color;
-      //   // alertaGanador.innerHTML = "GANÓ EL JUGADOR " + turno;
-      //   colorearfichasGandoras();
-      // }
-    }
-  }
-});
-
-function llenarColumna(numCol){
-  var numFila = 5;
-  while(numFila >= 0 && tableroJuego[numCol][numFila] != undefined){
-    numFila--;
-  }
-  if(numFila < 0) return;
-  //tableroJuego[numCol][numFila] = turno;
-  return numFila;
-}
-
-function getMousePos(evt) {
-  var mouseX = evt.offsetX * tablerot.width / tablerot.clientWidth;
-  var mouseY = evt.offsetY * tablerot.height / tablerot.clientHeight;
-  return {
-    x: mouseX,
-    y: mouseY
-  };
-}
-
-function posFiguraClickeada(evt){
-    let mouseX=evt.offsetX;
-    let mouseY=evt.offsetY;
-  for(let i=0; i<figures.length;i++){
-      const element=figures[i];
-      if(element.isPointInside(mouseX,mouseY)){
-          return {x:mouseX,y:mouseY};
-      }
-  }
-  for(let i=0; i<fichasJ2.length;i++){
-      const element=fichasJ2[i];
-      if(element.isPointInside(mouseX,mouseY)){
-          return {x:mouseX,y:mouseY};
-      }
-  }
-}*/
 
 
 
@@ -638,4 +621,7 @@ function reiniciarJuego() {
 canvas.addEventListener('mousedown', onMouseDown, false);
 canvas.addEventListener('mouseup', onMouseUp, false);
 canvas.addEventListener('mousemove', onMouseMove, false);
-document.getElementById("reiniciar").addEventListener("click", reiniciarJuego);
+document.getElementById("cuatro").addEventListener("click", setDificultad);
+document.getElementById("cinco").addEventListener("click", setDificultad);
+document.getElementById("seis").addEventListener("click", setDificultad);
+document.getElementById("siete").addEventListener("click", setDificultad);

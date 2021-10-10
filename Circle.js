@@ -4,9 +4,9 @@ class Circle extends Figure{
     constructor(posX,posY,radius,fill,context){
         super(posX,posY,fill,context)
         this.radius=radius;
-        this.fillStyle=fill;
         this.id;
         this.jugador;
+        this.imagen = fill;
     }
 
     //se obtiene la posición de x
@@ -46,17 +46,33 @@ class Circle extends Figure{
         return this.id;
     }
 
+
+
+
     draw(){
         super.draw();
         this.ctx.beginPath();
         this.ctx.arc(this.posX,this.posY,this.radius,0,2*Math.PI);
         this.ctx.fill();
-        // if(this.resaltado==true){
-        //     this.ctx.strokeStyle=this.resaltadoEstilo;
-        //     this.ctx.lineWidth=5;
-        //     this.ctx.stroke();
-        // }
         this.ctx.closePath();
+
+        //****************************************************//
+        // this.ctx.save();
+        // this.ctx.beginPath();
+        // this.ctx.arc(this.posX, this.posY, this.radius, 0, Math.PI * 2);
+        // this.ctx.closePath();
+        // this.ctx.clip();
+        // this.ctx.fileStyle = this.imagen;
+        // if(this.imagen != "#ffffff"){
+        //     this.ctx.drawImage(this.imagen, this.getPosX() - this.radius, this.getPosY()- this.radius, this.radius * 2 , this.radius * 2);   
+            
+        // }
+        // this.ctx.fill();
+        // ctx.shadowColor="black";
+        // this.ctx.strokeStyle="black";
+        // this.ctx.stroke();
+        // this.ctx.restore();
+        //*******************************************************//
     }
 
     getRadius(){
