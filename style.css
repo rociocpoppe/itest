@@ -10,7 +10,7 @@ body {
     background-image:url("fondo1.jpeg");
     background-position-x: 100%;
 }
-.container {
+.contenedor {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -26,9 +26,29 @@ body {
 }
 .primero{
     margin-right: 52px;
+    display: flex;
+    flex-direction: column;
     
+}
+.ultimo{
+    margin-left: 50px;
+    justify-content: center;
 }
 button{
     font-size: 25px;
-    margin: 10px;
+    
+}
+
+footer{
+    text-align: center;
+
+}
+
+#reiniciar {
+margin-left: 50px;
+    display: none;
+}
+
+#iniciar {
+    display: block;
 }

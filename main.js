@@ -31,6 +31,15 @@ let turnoJ1 = true;
 let turnoJ2 = false;
 let ganador;
 let gano = false;
+let inicio = false;
+let fillF1 =  document.getElementById("fichaJ1").value;
+let fillF2 = document.getElementById("fichaJ2").value;
+let minutos = 5;
+let segundos = 59;
+let cadena;
+let tiempo = true;
+let temp;
+
 
 // function addFigure() {
 
@@ -42,13 +51,18 @@ let gano = false;
 let imagen_1 = new Image();
 function cargarImagenUno() {
     imagen_1.src = "3.png";
+    // let st = "lklklklkl";
     imagen_1.onload = function () {
-        //console.log(imagen_1);
+        // console.log(typeof(imagen_1));
+        // console.log(typeof(st));
+        console.log(imagen_1);
+     
         //ctx.drawImage(this.imagen_1, this.posX - this.radius, this.posY- this.radius, this.radius * 2 , this.radius * 2);
         //return imagen_1;
     }
     return imagen_1;
 }
+// cargarImagenUno();
 
 // let imagen_2 = document.querySelector("#cuatro");
 let imagen_2 = new Image();
@@ -71,31 +85,34 @@ function setDificultad(e){
     if(e.target.id == "cuatro"){
         console.log("cuatro")
         dificultad = 4;
-        dimX = 600;
+        tableroI.setWidth(600);
+        tableroI.setHeight(600);
 
     }
     else if(e.target.id == "cinco"){
         console.log("cinco")
         dificultad = 5;
-        dimX = 700;
+        tableroI.setWidth(700);
+        tableroI.setHeight(700);
     }
     else if(e.target.id == "seis"){
         console.log("seis")
         dificultad = 6;
-        dimX = 800;
+        tableroI.setWidth(800);
+        tableroI.setHeight(800);
     }
     else{
         console.log("siete")
         dificultad = 7;
-        dimX = 900;
+        tableroI.setWidth(900);
+        tableroI.setHeight(900);
     }
-  
+    // esTableroInicial = true;
     // addFigures();
-    // tablero();
-    // drawFigure();
-
-
-}
+    // tableroI.dibujarTablero(esTableroInicial);
+    // esTableroInicial = false;
+    reiniciarJuego();
+ }
 
 //dibuja las figuras necesarias para el juego. Primero se borra el canvas y luego, se dibujan las fichas del jugador 1 y 
 //jugador 2. Además se setea por cada ficha un id para poder luego identificarlas. También se dibuja el tablero si
@@ -120,11 +137,11 @@ function drawFigure() {
 }
 
 //lama a la función
-addFigures();
+// addFigures();
 
 //lama a la función
 tablero();
-
+drawFigure();
 //Si es la primera vez que se carga, se dibuja el tablero y se setea en falso la variable esTableroInicial para
 //que luego cada vez que se muevan las fichas, se borre el canvas y se vuelva a redibujar el tablero pero con las 
 //posiciones ya ocupadas en él.
@@ -153,9 +170,9 @@ function tablero() {
 function addCircle() {
     //let color=randomRGBA();
     for (let i = 0; i < CANT_FIG; i++) {
-        let circle1 = new Circle( 50, canvasHeight - 200, 35, "blue", ctx);
+        let circle1 = new Circle( 50, canvasHeight - 200, 35, fillF1, ctx);
         fichasJ1.push(circle1);
-        let circle2 = new Circle(canvasWidth - 50, canvasHeight - 200, 35, "red", ctx);
+        let circle2 = new Circle(canvasWidth - 50, canvasHeight - 200, 35, fillF2, ctx);
         fichasJ2.push(circle2);
 
     }
@@ -167,7 +184,7 @@ function addCircle() {
 function addFigures() {
 
     addCircle();
-    drawFigure();
+    // drawFigure();
 
 }
 
@@ -247,7 +264,7 @@ function esTurno() {
 
 canvas.addEventListener('click', function (e) {
     let cont = 0;
-    if (lastClickedFigure != null && esTurno() && !gano) {
+    if (lastClickedFigure != null && esTurno() && !gano && inicio && tiempo) {
         //        isMouseDown = false;
         let _x = e.layerX;
         let _y = e.layerY;
@@ -320,7 +337,7 @@ canvas.addEventListener('click', function (e) {
                                 //gano en verdadero y se obtiene el id del ganador para imprimirlo en el DOM
                                     gano = true;
                                     ganador = casilleros.get(id)[0].getJugador();
-                                    document.getElementById("texto").innerHTML = "GANADOR JUGADOR " + ganador + "!!!";
+                                    document.getElementById("texto").innerHTML = "GANADOR JUGADOR " + ganador + " !!!";
                                 }
 
 
@@ -535,24 +552,69 @@ function onMouseUp(e) {
 //determina si el mouse se está moviendo. Si tengo el mouse abajo, tengo una figura seleccionada, 
 //y además no hay ganador, a la última figura clickeada, le pongo la nueva posicion y la dibujo de nuevo
 function onMouseMove(e) {
-    if (isMouseDown && lastClickedFigure != null && esTurno() && !gano) {
+    if (isMouseDown && lastClickedFigure != null && esTurno() && !gano && inicio) {
         lastClickedFigure.setPosition(e.layerX, e.layerY);
         drawFigure();
     }
 }
 
 
-//reinicia el juego en 5 minutos.
-// setTimeout(()=>{
-//     reiniciarJuego();
-
-// },300000); //cada esta cantidad de milisegundos llama a la función add figures
-
-
 //reinicia el juego ante el evento addEventListener del boton con id reiniciar.
 //borra las fichas de ambos jugadores, borra el tablero y vuelve a dibujar todo llamando a las funciones 
 //que se encargan de hacerlo
+function temporizador() {
+    if(segundos < 10){
+        cadena = minutos+":0"+segundos;
+    }else{
+        cadena = minutos+":"+segundos;
+    }
+    document.getElementById("texto").innerHTML = cadena;
+    //console.log(cadena);
+  if (minutos == 0 && segundos == 0) {
+        tiempo = false;
+        document.getElementById("texto").innerHTML = "Se acabo el tiempo";
+        clearInterval(temp);
+  } else if (segundos == 0){
+      minutos--;
+      segundos=60;
+  }    
+    segundos--;
+}
+
+
+
+
+function iniciarJuego(){
+    segundos = 59;
+    minutos = 4;
+    temp = setInterval(temporizador, 1000);
+    
+    let msj = document.getElementById("msjFichas");
+    msj.innerHTML = "";
+    let selectJ1 = document.getElementById("fichaJ1").value;
+    let selectJ2 = document.getElementById("fichaJ2").value;
+     if(selectJ1 != selectJ2){
+        inicio = true
+        fillF1 = selectJ1;
+        fillF2 = selectJ2;
+        addFigures();
+        drawFigure();
+        document.getElementById("iniciar").style.display="none";
+        document.getElementById("reiniciar").style.display="block";
+     }else{
+        msj.innerHTML = "No puedes seleccionar fichas iguales"; 
+        inicio = false;
+     }
+
+     return inicio;
+}
+
 function reiniciarJuego() {
+    clearCanvas();
+    clearInterval(temp);
+    segundos = 59;
+    minutos = 4;
+    inicio = false;
     esTableroInicial = true;
     gano = false;
     turnoJ1 = true;
@@ -562,8 +624,9 @@ function reiniciarJuego() {
     fichasJ2.splice(0);
     tableroI.getCasilleros().clear();
     tablero();
-    addFigures();
-    drawFigure();
+    document.getElementById("iniciar").style.display="block";
+    document.getElementById("reiniciar").style.display="none";
+
 }
 
 
@@ -576,3 +639,4 @@ document.getElementById("cinco").addEventListener("click", setDificultad);
 document.getElementById("seis").addEventListener("click", setDificultad);
 document.getElementById("siete").addEventListener("click", setDificultad);
 document.getElementById("reiniciar").addEventListener("click", reiniciarJuego);
+document.getElementById("iniciar").addEventListener("click", iniciarJuego);
