@@ -349,7 +349,12 @@ canvas.addEventListener('click', function (e) {
 });
 
 //MAP -> [ ID, [casillero, false, fila, columna] ]
-
+//se chequea verticalmente si hay un ganador. Para esto, se itera de acuerdo a la dificultad del juego 
+//(4,5,6 o 7 veces). Se utiliza la fila y la columna de ubicación de la ficha y se genera un id auxiliar
+//que nos servirá para comparar con el id de cada casillero. Si el casillero esta definido, se mira en el array map
+//si es true (lo que significa que está ocupado) y se obtiene el jugador que puso la ficha. Si el id también es igual, 
+//suma 1 a la cuenta. En caso de que la dificultad del juego sea igual al comtador, se determina que el participante
+//ganó.
 function chequeoVertical(id, fila, columna) {
     let contLinea = 1;
     let incremento = 100;
@@ -373,6 +378,9 @@ function chequeoVertical(id, fila, columna) {
     }
 }
 
+//se chequea horizontalmente si hay un ganador. Para poder comprobar si hay ganador, en esta función 
+//se tiene en cuenta tanto las fichas a la derecha como a la izquierda.También se hace uso de break para los casos e
+//los que no encuentra una ficha del mismo jugador o no hay ficha definida, deje de contar.
 function chequeoHorizontal(id, fila, columna) {
 
     let contLinea = 1;
@@ -400,9 +408,7 @@ function chequeoHorizontal(id, fila, columna) {
     for (let i = 0; i < dificultad - 1; i++) {
 
         let idDer = "" + fila + (columna + incrementoDer);
-        // console.log(idDer);
         let casilleroDer = casilleros.get(idDer);
-        //console.log(casilleroDer);
         if (casilleroDer != undefined) {
             if (casilleroDer[1] == true &&
                 casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()) {
@@ -422,7 +428,9 @@ function chequeoHorizontal(id, fila, columna) {
 
 
 }
-
+//se chequea diagonalmente si hay un ganador. Para poder comprobar si hay ganador, en esta función 
+//se tiene en cuenta tanto las fichas hacia arriba como hacia abajo.También se hace uso de break para los casos en
+//los que no encuentra una ficha del mismo jugador o no haya ficha puesta, deje de contar.
 function chequeoDiagonalUno(id, fila, columna) {
 
     let contLinea = 1;
@@ -518,35 +526,32 @@ function chequeoDiagonalDos(id, fila, columna) {
 }
 
 
-
+//determina que el botón del mouse dejó de apretarse. Setea la variable isMouseDown en falso, lo que sirve 
+//para cortar la función que establece el mousedown. 
 function onMouseUp(e) {
     isMouseDown = false;
 }
 
+//determina si el mouse se está moviendo. Si tengo el mouse abajo, tengo una figura seleccionada, 
+//y además no hay ganador, a la última figura clickeada, le pongo la nueva posicion y la dibujo de nuevo
 function onMouseMove(e) {
-
-    //si tengo el mouse abajo y tengo una figura seleccionada, a la figura le pongo la nueva posicion 
-    //y la dibujo de nuevo
     if (isMouseDown && lastClickedFigure != null && esTurno() && !gano) {
         lastClickedFigure.setPosition(e.layerX, e.layerY);
-
         drawFigure();
     }
-
-
 }
 
 
-
-
-
-
-
+//reinicia el juego en 5 minutos.
 // setTimeout(()=>{
 //     reiniciarJuego();
 
 // },300000); //cada esta cantidad de milisegundos llama a la función add figures
 
+
+//reinicia el juego ante el evento addEventListener del boton con id reiniciar.
+//borra las fichas de ambos jugadores, borra el tablero y vuelve a dibujar todo llamando a las funciones 
+//que se encargan de hacerlo
 function reiniciarJuego() {
     esTableroInicial = true;
     gano = false;
