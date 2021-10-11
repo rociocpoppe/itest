@@ -16,8 +16,7 @@ class Tablero {
     dibujarTablero(esTableroInicial) {
         let px = canvasWidth/2 - this.width/2;
         let py = canvasHeight - this.height;
-        // console.log(px);
-        // console.log(py);
+
 
 
         ctx.fillStyle = "#66B2FF";
@@ -51,12 +50,12 @@ class Tablero {
               }
             // for (let i = 0; i < this.casilleros.length; i++) {
 
-            //     this.casilleros[i][0].draw();
+                
 
             // }
         }
-        console.log(98989898);
-        console.log(this.casilleros); 
+      
+
     }
 
     getCasilleros() {
