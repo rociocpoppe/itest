@@ -32,50 +32,15 @@ let turnoJ2 = false;
 let ganador;
 let gano = false;
 let inicio = false;
-let fillF1 =  document.getElementById("fichaJ1").value;
+let fillF1 = document.getElementById("fichaJ1").value;
 let fillF2 = document.getElementById("fichaJ2").value;
-let minutos = 5;
+let minutos = 4;
 let segundos = 59;
 let cadena;
 let tiempo = true;
 let temp;
 
 
-// function addFigure() {
-
-//     addCircle();
-
-//     drawFigure();
-// }
-// let imagen_1 = document.querySelector("#tres");
-let imagen_1 = new Image();
-function cargarImagenUno() {
-    imagen_1.src = "3.png";
-    // let st = "lklklklkl";
-    imagen_1.onload = function () {
-        // console.log(typeof(imagen_1));
-        // console.log(typeof(st));
-        console.log(imagen_1);
-     
-        //ctx.drawImage(this.imagen_1, this.posX - this.radius, this.posY- this.radius, this.radius * 2 , this.radius * 2);
-        //return imagen_1;
-    }
-    return imagen_1;
-}
-// cargarImagenUno();
-
-// let imagen_2 = document.querySelector("#cuatro");
-let imagen_2 = new Image();
-function cargarImagenDos() {
-    imagen_2.src = "4.png";
-    imagen_2.onload = function () {
-        //console.log(imagen_2);
-        //ctx.drawImage(this.imagen_2, this.posX - this.radius, this.posY- this.radius, this.radius * 2 , this.radius * 2);
-        //console.log(imagen_2);
-
-    }
-    return imagen_2;
-}
 
 
 //se determina la dificultad del juego, siendo 4 la opción predeterminada. Se puede jugar además con las opciones de 
@@ -83,26 +48,26 @@ function cargarImagenDos() {
 function setDificultad(e){
 
     if(e.target.id == "cuatro"){
-        console.log("cuatro")
+
         dificultad = 4;
         tableroI.setWidth(600);
         tableroI.setHeight(600);
 
     }
     else if(e.target.id == "cinco"){
-        console.log("cinco")
+
         dificultad = 5;
         tableroI.setWidth(700);
         tableroI.setHeight(700);
     }
     else if(e.target.id == "seis"){
-        console.log("seis")
+
         dificultad = 6;
         tableroI.setWidth(800);
         tableroI.setHeight(800);
     }
     else{
-        console.log("siete")
+
         dificultad = 7;
         tableroI.setWidth(900);
         tableroI.setHeight(900);
@@ -119,29 +84,30 @@ function setDificultad(e){
 // no es la primera vez que se carga.
 function drawFigure() {
     clearCanvas();
+    if (!esTableroInicial) {
+        tablero();
+    }
     //cada vez que muevo uno, se va borrando todo y re dibujando
     for (let i = 0; i < fichasJ1.length; i++) {
         fichasJ1[i].setId(i + 1);
         fichasJ1[i].draw();
-        // console.log( fichasJ1[i]);
+
     }
     for (let i = 0; i < fichasJ2.length; i++) {
         fichasJ2[i].setId(i + CANT_FIG + 1);
         fichasJ2[i].draw();
-        //console.log( fichasJ2[i]);
+
     }
-    if (!esTableroInicial) {
-        tablero();
-    }
+
 
 }
 
 //lama a la función
 // addFigures();
-
+drawFigure();
 //lama a la función
 tablero();
-drawFigure();
+
 //Si es la primera vez que se carga, se dibuja el tablero y se setea en falso la variable esTableroInicial para
 //que luego cada vez que se muevan las fichas, se borre el canvas y se vuelva a redibujar el tablero pero con las 
 //posiciones ya ocupadas en él.
@@ -170,9 +136,9 @@ function tablero() {
 function addCircle() {
     //let color=randomRGBA();
     for (let i = 0; i < CANT_FIG; i++) {
-        let circle1 = new Circle( 50, canvasHeight - 200, 35, fillF1, ctx);
+        let circle1 = new Circle( 50, canvasHeight - 200, 35,"#ffffff" , ctx, fillF1);
         fichasJ1.push(circle1);
-        let circle2 = new Circle(canvasWidth - 50, canvasHeight - 200, 35, fillF2, ctx);
+        let circle2 = new Circle(canvasWidth - 50, canvasHeight - 200, 35,"#ffffff" , ctx,fillF2);
         fichasJ2.push(circle2);
 
     }
@@ -211,25 +177,6 @@ function findClickedFigure(x, y) {
     }
 }
 
-
-//se llama una vez que se apreta el boton izquierdo del mouse.Sirve para obtener la posición clickeada y preguntar
-//si esa posición esté dentro de alguna de las fichas. En caso de que encuentre alguna ficha en esa posición,
-//la ultima imagen clickeada se vuelve la imagen que retorna la funcion findClickedFigure
-function onMouseDown(e) {
-    isMouseDown = true;
-    if (lastClickedFigure != null) {
-        lastClickedFigure.setResaltado(false);
-        lastClickedFigure = null;
-    }
-    let clickFig = findClickedFigure(e.layerX, e.layerY);//coordenadas de x e y dentro del canvas
-
-    if (clickFig != null) {
-        clickFig.setResaltado(true);
-        lastClickedFigure = clickFig;
-    }
-    drawFigure();
-
-}
 
 
 //se determina el turno de los jugadores. Por default, se decidió que el jugador 1 siempre comience el juego.
@@ -273,26 +220,30 @@ canvas.addEventListener('click', function (e) {
             if (!gano) {
                 // for (let i = 0; i < casilleros.length; i++) {//49 pos
 
-                //console.log("ENTRO AL FOR");
+
                 if (_x < dataCasillero[0].getPosX() + dataCasillero[0].getRadius() &&
                     _x > dataCasillero[0].getPosX() - dataCasillero[0].getRadius()) {
 
                   if (_y <= canvasHeight - tableroI.getHeight()) {
                        
                         let columna = dataCasillero[0].getPosX();
-                        // console.log(columna);
+   
 
                         let fila = canvasHeight - 50 //tableroI.getHeight() + 50;
 
                         while (fila > canvasHeight - tableroI.getHeight() - 49 && cont != 1) {
                             let id = "" + fila + columna;  // id = ""+fila+100+columna;
-                            console.log(id);
-                            if (casilleros.get(id)[1] == false && cont == 0) {
 
-                                casilleros.get(id)[0].setFill(lastClickedFigure.getFill());
+                            if (casilleros.get(id)[1] == false && cont == 0) {
+                                let nuevoPosX = casilleros.get(id)[0].getPosX();
+                                let nuevoPosY = casilleros.get(id)[0].getPosY();
+                                lastClickedFigure.setPosition(nuevoPosX, nuevoPosY);
+                                
+                                //casilleros.get(id)[0].setFill(lastClickedFigure.getFill());
                                 casilleros.get(id)[0].setId(lastClickedFigure.getId());
                                 casilleros.get(id)[1] = true;
-                                casilleros.get(id)[0].draw();
+                                //casilleros.get(id)[0].draw();
+                                drawFigure();
 
                                 //se chequea si el id de la última imagen clickeada es del jugador 1
                                 if (lastClickedFigure.getId() <= CANT_FIG) {
@@ -301,27 +252,27 @@ canvas.addEventListener('click', function (e) {
                                     casilleros.get(id)[0].setJugador(1);
                                     //si el id de la ficha en la posición es igual al id de la última figura 
                                     //clickeada, se borra la ficha en esa posición, y se dibuja. 
-                                    for (let i = 0; i < fichasJ1.length; i++) {
-                                        if (fichasJ1[i].getId() == lastClickedFigure.getId()) {
-                                            fichasJ1.splice(i, 1);
+                                    // for (let i = 0; i < fichasJ1.length; i++) {
+                                    //     if (fichasJ1[i].getId() == lastClickedFigure.getId()) {
+                                    //         fichasJ1.splice(i, 1);
 
-                                            drawFigure();
-                                        }
-                                    }
+                                    //         drawFigure();
+                                    //     }
+                                    // }
                                     //document.getElementById("texto").innerHTML = "Es el turno del jugador 2 ";
                                 }
                                 else {
                                     turnoJ1 = true;
                                     turnoJ2 = false;
                                     casilleros.get(id)[0].setJugador(2);
-                                    for (let i = 0; i < fichasJ2.length; i++) {
-                                        if (fichasJ2[i].getId() == lastClickedFigure.getId()) {
-                                            fichasJ2.splice(i, 1);
+                                    // for (let i = 0; i < fichasJ2.length; i++) {
+                                    //     if (fichasJ2[i].getId() == lastClickedFigure.getId()) {
+                                    //         fichasJ2.splice(i, 1);
 
-                                            drawFigure();
-                                        }
+                                    //         drawFigure();
+                                    //     }
 
-                                    }
+                                    // }
                                     //document.getElementById("texto").innerHTML = "Es el turno del jugador 1 ";
                                 }
                                 //se corrobora si hay ganador. Para esto se chequea vertical, horizontal y diagonales
@@ -478,9 +429,9 @@ function chequeoDiagonalUno(id, fila, columna) {
     for (let i = 0; i < dificultad - 1; i++) {
 
         let idDer = "" + (fila + incrementoDer) + (columna + incrementoDer);
-        // console.log(idDer);
+
         let casilleroDer = casilleros.get(idDer);
-        //console.log(casilleroDer);
+
         if (casilleroDer != undefined) {
             if (casilleroDer[1] == true &&
                 casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()) {
@@ -524,9 +475,8 @@ function chequeoDiagonalDos(id, fila, columna) {
     for (let i = 0; i < dificultad - 1; i++) {
 
         let idDer = "" + (fila - incrementoDer) + (columna + incrementoDer);
-        // console.log(idDer);
+
         let casilleroDer = casilleros.get(idDer);
-        //console.log(casilleroDer);
         if (casilleroDer != undefined) {
             if (casilleroDer[1] == true &&
                 casilleroDer[0].getJugador() == casilleros.get(id)[0].getJugador()) {
@@ -546,6 +496,25 @@ function chequeoDiagonalDos(id, fila, columna) {
 }
 
 
+//se llama una vez que se apreta el boton izquierdo del mouse.Sirve para obtener la posición clickeada y preguntar
+//si esa posición esté dentro de alguna de las fichas. En caso de que encuentre alguna ficha en esa posición,
+//la ultima imagen clickeada se vuelve la imagen que retorna la funcion findClickedFigure
+function onMouseDown(e) {
+    isMouseDown = true;
+    if (lastClickedFigure != null) {
+        lastClickedFigure.setResaltado(false);
+        lastClickedFigure = null;
+    }
+    let clickFig = findClickedFigure(e.layerX, e.layerY);//coordenadas de x e y dentro del canvas
+
+    if (clickFig != null) {
+        clickFig.setResaltado(true);
+        lastClickedFigure = clickFig;
+    }
+    drawFigure();
+
+}
+
 //determina que el botón del mouse dejó de apretarse. Setea la variable isMouseDown en falso, lo que sirve 
 //para cortar la función que establece el mousedown. 
 function onMouseUp(e) {
@@ -557,6 +526,7 @@ function onMouseUp(e) {
 function onMouseMove(e) {
     if (isMouseDown && lastClickedFigure != null && esTurno() && !gano && inicio) {
         lastClickedFigure.setPosition(e.layerX, e.layerY);
+        lastClickedFigure.draw();
         drawFigure();
     }
 }
@@ -572,7 +542,7 @@ function temporizador() {
         cadena = minutos+":"+segundos;
     }
     document.getElementById("texto").innerHTML = cadena;
-    //console.log(cadena);
+
   if (minutos == 0 && segundos == 0) {
         tiempo = false;
         document.getElementById("texto").innerHTML = "Se acabo el tiempo";
@@ -590,8 +560,7 @@ function temporizador() {
 function iniciarJuego(){
     segundos = 59;
     minutos = 4;
-    temp = setInterval(temporizador, 1000);
-    
+    temp = setInterval(temporizador, 1000); 
     let msj = document.getElementById("msjFichas");
     msj.innerHTML = "";
     let selectJ1 = document.getElementById("fichaJ1").value;
@@ -622,6 +591,7 @@ function reiniciarJuego() {
     gano = false;
     turnoJ1 = true;
     turnoJ2 = false;
+    tiempo = true;
     document.getElementById("texto").innerHTML = "";
     fichasJ1.splice(0);
     fichasJ2.splice(0);

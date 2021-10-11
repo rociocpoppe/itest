@@ -1,14 +1,25 @@
 class Circle extends Figure{
     
     //se crea el constructor de la ficha, con los parámetros necesarios para poder dibujarla en los diferentes casos que se presenten
-    constructor(posX,posY,radius,fill,context){
+    constructor(posX,posY,radius,fill,context, img){
         super(posX,posY,fill,context)
         this.radius=radius;
         this.id;
         this.jugador;
-        this.imagen = fill;
+        const imagen = new Image();
+        this.img = img;
+        imagen.src = img;
+        this.imagen = imagen;
+        this.cargoImg = false;
     }
 
+    setImagen(img){
+        this.imagen.src = img;
+    }
+
+    getImagen(){
+        return this.imagen;
+    }
     //se obtiene la posición de x
     getPosX(){
         return this.posX;
@@ -50,29 +61,33 @@ class Circle extends Figure{
 
 
     draw(){
-        super.draw();
+
+        //super.draw();
+        this.ctx.fillStyle = this.fill;
+        //console.log(this.fill);
         this.ctx.beginPath();
         this.ctx.arc(this.posX,this.posY,this.radius,0,2*Math.PI);
         this.ctx.fill();
         this.ctx.closePath();
+        console.log(this.img);
+        console.log(this.getImagen().src);
+        
+        if(this.img != undefined){
+                     //console.log(this.getImagen().src);
+            if (this.cargoImg) {
 
-        //****************************************************//
-        // this.ctx.save();
-        // this.ctx.beginPath();
-        // this.ctx.arc(this.posX, this.posY, this.radius, 0, Math.PI * 2);
-        // this.ctx.closePath();
-        // this.ctx.clip();
-        // this.ctx.fileStyle = this.imagen;
-        // if(this.imagen != "#ffffff"){
-        //     this.ctx.drawImage(this.imagen, this.getPosX() - this.radius, this.getPosY()- this.radius, this.radius * 2 , this.radius * 2);   
-            
-        // }
-        // this.ctx.fill();
-        // ctx.shadowColor="black";
-        // this.ctx.strokeStyle="black";
-        // this.ctx.stroke();
-        // this.ctx.restore();
-        //*******************************************************//
+                this.ctx.drawImage(this.getImagen(), this.posX - this.radius, this.posY - this.radius, this.radius * 2, this.radius * 2);
+            }
+            else {
+                this.getImagen().onload = () => {
+                    this.ctx.drawImage(this.getImagen(), this.posX - this.radius, this.posY - this.radius, this.radius * 2, this.radius * 2);
+                }
+                this.cargoImg = true;
+            }
+        }
+
+
+
     }
 
     getRadius(){
